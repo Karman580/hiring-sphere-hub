@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X, User, Briefcase } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,12 +34,14 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <User className="h-4 w-4 mr-2" />
-              Sign In
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/login">
+                <User className="h-4 w-4 mr-2" />
+                Sign In
+              </Link>
             </Button>
-            <Button variant="cta" size="sm">
-              Post Job
+            <Button variant="cta" size="sm" asChild>
+              <Link to="/admin">Post Job</Link>
             </Button>
           </div>
 
@@ -73,12 +76,14 @@ const Header = () => {
             </div>
             <div className="pt-4 pb-3 border-t border-border">
               <div className="flex items-center px-2 space-x-3">
-                <Button variant="ghost" size="sm" className="w-full">
-                  <User className="h-4 w-4 mr-2" />
-                  Sign In
+                <Button variant="ghost" size="sm" className="w-full" asChild>
+                  <Link to="/login">
+                    <User className="h-4 w-4 mr-2" />
+                    Sign In
+                  </Link>
                 </Button>
-                <Button variant="cta" size="sm" className="w-full">
-                  Post Job
+                <Button variant="cta" size="sm" className="w-full" asChild>
+                  <Link to="/admin">Post Job</Link>
                 </Button>
               </div>
             </div>

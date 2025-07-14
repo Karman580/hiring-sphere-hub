@@ -1,79 +1,82 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import JobCard from "./JobCard";
 import { Search, Filter } from "lucide-react";
+import { api, Job } from "@/lib/api";
 
 const JobsSection = () => {
-  // Mock job data
-  const jobs = [
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      const response = await api.getJobs({ limit: 6 });
+      setJobs(response.jobs);
+    } catch (error) {
+      console.error('Failed to fetch jobs:', error);
+      // Fallback to mock data if API fails
+      setJobs(mockJobs);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Mock job data as fallback - properly typed as Job[]
+  const mockJobs: Job[] = [
     {
       id: "1",
       title: "Senior Frontend Developer",
       company: "TechCorp Inc",
+      companyId: "1",
       location: "San Francisco, CA",
-      type: "Full-time",
+      type: "Full-time" as const,
       salary: "$120K - $160K",
       description: "We are looking for a Senior Frontend Developer to join our dynamic team. You'll work on cutting-edge web applications using React, TypeScript, and modern development practices.",
       requirements: ["React", "TypeScript", "Node.js", "GraphQL", "AWS"],
-      postedDate: "2 days ago"
+      responsibilities: ["Develop frontend applications", "Code reviews", "Mentor junior developers"],
+      benefits: ["Health insurance", "Flexible hours", "Remote work"],
+      status: "active" as const,
+      postedDate: new Date().toISOString(),
+      createdBy: "1",
+      applicationsCount: 5
     },
     {
       id: "2",
       title: "Product Manager",
       company: "InnovateLabs",
+      companyId: "2",
       location: "New York, NY",
-      type: "Full-time",
+      type: "Full-time" as const,
       salary: "$140K - $180K",
       description: "Lead product strategy and development for our AI-powered platform. Work with cross-functional teams to deliver exceptional user experiences.",
       requirements: ["Product Strategy", "Agile", "SQL", "Analytics", "Leadership"],
-      postedDate: "1 day ago"
-    },
-    {
-      id: "3",
-      title: "UX Designer",
-      company: "DesignStudio",
-      location: "Remote",
-      type: "Contract",
-      salary: "$80K - $100K",
-      description: "Create intuitive and beautiful user experiences for our mobile and web applications. Collaborate with product and engineering teams.",
-      requirements: ["Figma", "User Research", "Prototyping", "Design Systems", "Mobile Design"],
-      postedDate: "3 days ago"
-    },
-    {
-      id: "4",
-      title: "DevOps Engineer",
-      company: "CloudTech Solutions",
-      location: "Austin, TX",
-      type: "Full-time",
-      salary: "$110K - $140K",
-      description: "Build and maintain scalable cloud infrastructure. Implement CI/CD pipelines and ensure high availability of our services.",
-      requirements: ["AWS", "Kubernetes", "Docker", "Terraform", "Python"],
-      postedDate: "1 week ago"
-    },
-    {
-      id: "5",
-      title: "Data Scientist",
-      company: "AI Innovations",
-      location: "Boston, MA",
-      type: "Full-time",
-      salary: "$130K - $170K",
-      description: "Develop machine learning models and extract insights from large datasets. Work on cutting-edge AI projects.",
-      requirements: ["Python", "Machine Learning", "SQL", "TensorFlow", "Statistics"],
-      postedDate: "4 days ago"
-    },
-    {
-      id: "6",
-      title: "Backend Developer",
-      company: "StartupXYZ",
-      location: "Seattle, WA",
-      type: "Full-time",
-      salary: "$100K - $130K",
-      description: "Build robust APIs and microservices. Work with modern technologies in a fast-paced startup environment.",
-      requirements: ["Node.js", "MongoDB", "Express", "REST APIs", "Microservices"],
-      postedDate: "5 days ago"
+      responsibilities: ["Product strategy", "Team coordination", "Market analysis"],
+      benefits: ["Stock options", "Health insurance", "Vacation time"],
+      status: "active" as const,
+      postedDate: new Date().toISOString(),
+      createdBy: "1",
+      applicationsCount: 8
     }
   ];
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading jobs...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 bg-background">
